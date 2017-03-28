@@ -70,7 +70,7 @@ class Point():
 
 
     def __neg__(self):
-        return Point(self.x, -self.y, 
+        return Point(self.x, (-self.y) % self.p, 
                 self.b, self.c, self.p, 
                 self.inf)
 
