@@ -1,4 +1,5 @@
 # y^2 = x^3 + bx + c mod p
+from eea import inv
 
 class Point():
 
@@ -20,6 +21,9 @@ class Point():
 
 
     def __str__(self):
+        if self.inf: return 'Inf'
+        else: return '(%r,%r)' % (self.x, self.y)
+        '''
         if self.inf:
             return 'Inf on y^2 = x^3 + %rx + %r mod %r' \
                                     % (self.b, self.c, self.p)
@@ -27,29 +31,64 @@ class Point():
             return 'Point(%r,%r) on y^2 = x^3 + %rx + %r mod %r' \
                                     % (self.x, self.y,
                                         self.b, self.c, self.p)
+        '''
+
+    def __eq__(self, p2):
+        return (self.inf == p2.inf
+                and self.b == p2.b
+                and self.c == p2.c
+                and self.p == p2.p
+                and self.x == p2.x
+                and self.y == p2.y)
 
 
     def __add__(self, p2):
+        assert (self.b == p2.b
+            and self.c == p2.c
+            and self.p == p2.p), 'two points not on the same curve'
+
         if self.inf:
             return p2
         elif p2.inf:
             return self
+        elif self == (-p2):
+            return Point(0, 0, self.b, self.c, self.p, True)
         else:
-            assert (self.b, self.c, self.p) == (p2.b, p2.c, p2.p)
             x1,y1 = self.x, self.y
             x2,y2 = p2.x, p2.y
             b,c,p = self.b, self.c, self.p
-            #TODO
-            return Point(1,2,self.b, self.c, self.p)
+            
+            if self == p2:
+                m = ((3*x1**2 + b) * inv((2 * y1)%p, p)) % p
+            else:
+                m = ((y2-y1) * inv((x2-x1)%p, p)) % p
+
+            x3 = ( pow(m,2,p) - x1 - x2 ) % p
+            y3 = (m * (x1-x3) - y1) % p
+
+            return Point(x3 ,y3, self.b, self.c, self.p)
+
+
+    def __neg__(self):
+        return Point(self.x, -self.y, 
+                self.b, self.c, self.p, 
+                self.inf)
+
+
+    def __sub__(self, p2):
+        return self + (-p2)    
 
 
     def __mul__(self, a):
-        #TODO
-        return sum((self for i in range(a)),Point(0,0,0,0,0,True))
+        #take multiples of a point using double and add
+        if a == 0:
+            return Point(0,0,self.b,self.c,self.p, True)
+        else:
+            return sum( (self for i in range(a)),
+                        Point(0,0,self.b,self.c,self.p,True) )
 
 
     def __rmul__(self, a):
-        #TODO
         return self * a
 
 
@@ -60,6 +99,16 @@ class EllipticCurve():
         self.p = p
         assert 4*pow(self.b,3,self.p) + 27*pow(self.c,2,self.p) % self.p != 0, \
                 '4b^3+27c^2 = 0 not allowed'
+
+
+    def __repr__(self):
+        s = 'EllipticCurve(%r,%r,%r)' 
+        return s % (self.b, self.c, self.p)
+
+
+    def __str__(self):
+        s = 'EllipticCurve y^2 = x^3 + %rx + %r mod %r' 
+        return s % (self.b,self.c,self.p)
 
 
     def sqrt(self,x):
@@ -78,23 +127,4 @@ class EllipticCurve():
             y = -self.sqrt( (x**3 + self.b * x + self.c) % self.p )
         return Point(x,y, self.b, self.c, self.p)
 
-
-if __name__ == '__main__':
-    e = EllipticCurve(2,1,231)
-
-    p1 = e(1,2)
-    print repr(p1)
-    print p1
-    print '-' * 20
-
-    p2 = e('inf')
-    print repr(p2)
-    print p2
-
-    print '-'*20
-    print p1 + p2
-
-    print '-'*20
-    print 2 * p1
-    
 

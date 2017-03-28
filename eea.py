@@ -21,7 +21,7 @@ def inv(a, p):
     '''
     compute the inverse of a mod p
     '''
-    r,s,t = EEA(p, a)
+    r,s,t = eea(p, a)
     if r == 1:
         return t % p
     else:
