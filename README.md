@@ -7,7 +7,13 @@
 >>> from ecc import EllipticCurve
 >>> e = EllipticCurve(4,4,5)
 
+>>> print e
+y^2 = x^3 + 4x + 4 mod 5
+
 >>> p1 = e(1,2)
+>>> print p1
+(1,2)
+
 >>> p2 = e(0,2)
 ```
 
