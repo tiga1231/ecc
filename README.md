@@ -34,6 +34,12 @@ Point(1,2,4,4,5)
 (4,3)
 ```
 
+### Negation
+```python
+>>> print -p1
+(1,3)
+```
+
 
 ### Scalar multiplication
 ```python
@@ -41,6 +47,8 @@ Point(1,2,4,4,5)
 (2,0)
 >>> print 4*p1
 Inf
+>>> print -2*p2
+(1,3)
 ```
 
 

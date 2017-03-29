@@ -68,8 +68,9 @@ class Point():
 
     def __mul__(self, a):
         #take multiples of a point using seccessive doubling
-        #
-        if a == 0:
+        if a < 0:
+            return (-self) * (-a)
+        elif a == 0:
             return Point(0,0,self.b,self.c,self.p, True)
         elif a==1:
             return Point(self.x, self.y, self.b, self.c, self.p)
