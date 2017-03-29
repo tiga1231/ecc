@@ -110,7 +110,7 @@ class EllipticCurve():
 
 
     def __str__(self):
-        s = 'EllipticCurve y^2 = x^3 + %rx + %r mod %r' 
+        s = 'y^2 = x^3 + %rx + %r mod %r' 
         return s % (self.b,self.c,self.p)
 
 
@@ -120,7 +120,7 @@ class EllipticCurve():
         return math.sqrt(x)
 
 
-    def __call__(self, x, y):
+    def __call__(self, x, y=0):
         if x == 'inf':
             return Point(0,0,self.b,self.c,self.p,True)
         '''
