@@ -25,6 +25,7 @@ def inv(a, p):
     if r == 1:
         return t % p
     else:
-        raise ValueError, '%d is not coprime with %d' % (a, p)
+        s = '\n(a,p)=(%r,%r) are not coprime, \nFound a factor of %r: %r'
+        raise ValueError, s % (a, p, p, r)
 
         

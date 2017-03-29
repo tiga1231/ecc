@@ -21,32 +21,22 @@ class Point():
 
 
     def __str__(self):
-        if self.inf: return 'Inf'
-        else: return '(%r,%r)' % (self.x, self.y)
-        '''
         if self.inf:
-            return 'Inf on y^2 = x^3 + %rx + %r mod %r' \
-                                    % (self.b, self.c, self.p)
-        else:     
-            return 'Point(%r,%r) on y^2 = x^3 + %rx + %r mod %r' \
-                                    % (self.x, self.y,
-                                        self.b, self.c, self.p)
-        '''
+            return 'Inf'
+        else:
+            return '(%r,%r)' % (self.x, self.y)
+
 
     def __eq__(self, p2):
         return (self.inf == p2.inf
-                and self.b == p2.b
-                and self.c == p2.c
-                and self.p == p2.p
-                and self.x == p2.x
-                and self.y == p2.y)
+                and self.b == p2.b and self.c == p2.c and self.p == p2.p
+                and self.x == p2.x and self.y == p2.y)
 
 
     def __add__(self, p2):
         assert (self.b == p2.b
             and self.c == p2.c
             and self.p == p2.p), 'two points not on the same curve'
-
         if self.inf:
             return p2
         elif p2.inf:
@@ -57,15 +47,12 @@ class Point():
             x1,y1 = self.x, self.y
             x2,y2 = p2.x, p2.y
             b,c,p = self.b, self.c, self.p
-            
             if self == p2:
                 m = ((3*x1**2 + b) * inv((2 * y1)%p, p)) % p
             else:
                 m = ((y2-y1) * inv((x2-x1)%p, p)) % p
-
             x3 = ( pow(m,2,p) - x1 - x2 ) % p
             y3 = (m * (x1-x3) - y1) % p
-
             return Point(x3 ,y3, self.b, self.c, self.p)
 
 
@@ -80,13 +67,29 @@ class Point():
 
 
     def __mul__(self, a):
-        #take multiples of a point using double and add
+        #take multiples of a point using seccessive doubling
+        #
         if a == 0:
             return Point(0,0,self.b,self.c,self.p, True)
+        elif a==1:
+            return Point(self.x, self.y, self.b, self.c, self.p)
+        elif a==2:
+            return self + self
         else:
-            return sum( (self for i in range(a)),
-                        Point(0,0,self.b,self.c,self.p,True) )
+            a = bin(a)[2:]
+            res = self
+            for i in a:
+                if i == '1':
+                    res += self
+                res += res
+            return res
 
+            #recursion doen't work for large a
+            #return (self*int(a/2))*2 + self*(a%2)
+            
+            # this doesn't work either
+            #return sum( (self for i in xrange(a)),
+            #            Point(0,0,self.b,self.c,self.p,True) )
 
     def __rmul__(self, a):
         return self * a
@@ -117,14 +120,14 @@ class EllipticCurve():
         return math.sqrt(x)
 
 
-    def __call__(self, x, y='+'):
+    def __call__(self, x, y):
         if x == 'inf':
             return Point(0,0,self.b,self.c,self.p,True)
-        
+        '''
         if y=='+':
             y = self.sqrt( (x**3 + self.b * x + self.c) % self.p )
         elif y == '-':
             y = -self.sqrt( (x**3 + self.b * x + self.c) % self.p )
+        '''
         return Point(x,y, self.b, self.c, self.p)
-
 
