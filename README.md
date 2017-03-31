@@ -4,7 +4,7 @@
 
 ### Init
 ```python
->>> from ecc import EllipticCurve
+>>> from ec import EllipticCurve
 >>> e = EllipticCurve(4,4,5)
 
 >>> print e

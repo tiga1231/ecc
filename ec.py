@@ -2,7 +2,7 @@
 from eea import inv
 
 class Point():
-
+    
     def __init__(self, x, y, b, c, p, inf=False):
         self.inf = inf
         self.x, self.y = x, y

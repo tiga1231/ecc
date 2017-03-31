@@ -1,4 +1,4 @@
-from ecc import *
+from ec import *
 from math import factorial
 from random import randint
 
