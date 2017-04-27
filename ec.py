@@ -78,11 +78,15 @@ class Point():
             return self + self
         else:
             a = bin(a)[2:]
-            res = self
-            for i in a:
+            res = Point(0,0,self.b,self.c,self.p, inf=True)
+            
+            for i in a[:-1]:
                 if i == '1':
                     res += self
                 res += res
+
+            if a[-1] == '1':
+                res += self
             return res
 
             #recursion doen't work for large a
